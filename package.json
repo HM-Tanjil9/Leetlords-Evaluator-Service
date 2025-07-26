@@ -15,9 +15,13 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@eslint/js": "^9.32.0",
     "@types/express": "^5.0.3",
+    "eslint": "^9.32.0",
+    "globals": "^16.3.0",
     "nodemon": "^3.1.10",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.38.0"
   },
   "dependencies": {
     "concurrently": "^9.2.0",
