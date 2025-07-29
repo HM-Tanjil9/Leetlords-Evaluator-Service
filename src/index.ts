@@ -12,9 +12,22 @@ app.listen(serverConfig.PORT, () => {
   console.log(`Server started at *: ${serverConfig.PORT}`);
   SampleWorker("SampleQueue");
   console.log("----");
-  sampleQueueProducer("SampleJob", {
-    name: "Tanjil",
-    location: "Dhaka",
-    position: "jobless",
-  });
+  sampleQueueProducer(
+    "SampleJob",
+    {
+      name: "Tanjil",
+      location: "Dhaka",
+      position: "jobless",
+    },
+    2
+  );
+  sampleQueueProducer(
+    "SampleJob",
+    {
+      name: "HM Tanjil",
+      location: "Dhaka",
+      position: "software Engineer",
+    },
+    1
+  );
 });
