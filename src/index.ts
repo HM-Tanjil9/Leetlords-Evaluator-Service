@@ -1,6 +1,7 @@
 import { createBullBoard } from "@bull-board/api";
 import { BullMQAdapter } from "@bull-board/api/bullMQAdapter";
 import { ExpressAdapter } from "@bull-board/express";
+import bodyParser from "body-parser";
 import express, { Express } from "express";
 import serverConfig from "./config/serverConfig";
 import sampleQueueProducer from "./producers/sampleQueueProducer";
@@ -9,6 +10,10 @@ import apiRouter from "./routes";
 import SampleWorker from "./workers/SampleWorker";
 
 const app: Express = express();
+
+app.use(bodyParser.urlencoded());
+app.use(bodyParser.json());
+app.use(bodyParser.text());
 
 app.use("/api", apiRouter);
 
