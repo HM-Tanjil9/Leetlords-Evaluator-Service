@@ -4,7 +4,7 @@ import { ExpressAdapter } from "@bull-board/express";
 import bodyParser from "body-parser";
 import express, { Express } from "express";
 import serverConfig from "./config/serverConfig";
-import runPython from "./containers/runPythonDocker";
+import runJava from "./containers/runJavaDocker";
 import sampleQueue from "./queues/sampleQueue";
 import apiRouter from "./routes";
 import SampleWorker from "./workers/SampleWorker";
@@ -32,13 +32,18 @@ app.listen(serverConfig.PORT, () => {
   // This worker's is job listener, worker's duty is to complete the job
   SampleWorker("SampleQueue");
   const code = `
-x = input()
-y = input()
-print("value of x is", x)
-print("value of y is", y)
+  import java.util.*;
+  public class Main {
+    public static void main(String[] args) {
+      Scanner scn = new Scanner(System.in);
+      int input = scn.nextInt();
+      System.out.println("input value given by user: " + input);
+      for(int i=0; i < input; i++) {
+        System.out.println(i);
+      }
+    }
+  }
   `;
-  const testCase = `100
-200
-  `;
-  runPython(code, testCase);
+  const testCase = `10`;
+  runJava(code, testCase);
 });
