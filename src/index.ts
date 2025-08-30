@@ -4,10 +4,13 @@ import { ExpressAdapter } from "@bull-board/express";
 import bodyParser from "body-parser";
 import express, { Express } from "express";
 import serverConfig from "./config/serverConfig";
-import runCpp from "./containers/runCppDocker";
+import submissionQueueProducer from "./producers/submissionQueueProducer";
 import sampleQueue from "./queues/sampleQueue";
+import submissionQueue from "./queues/submissionQueue";
 import apiRouter from "./routes";
+import { submission_queue } from "./utils/constants";
 import SampleWorker from "./workers/SampleWorker";
+import SubmissionWorker from "./workers/submissionWorker";
 
 const app: Express = express();
 
@@ -21,7 +24,7 @@ const serverAdapter = new ExpressAdapter();
 serverAdapter.setBasePath("/ui");
 
 createBullBoard({
-  queues: [new BullMQAdapter(sampleQueue)],
+  queues: [new BullMQAdapter(sampleQueue), new BullMQAdapter(submissionQueue)],
   serverAdapter,
 });
 
@@ -31,6 +34,7 @@ app.listen(serverConfig.PORT, () => {
   console.log(`Server started at *: ${serverConfig.PORT}`);
   // This worker's is job listener, worker's duty is to complete the job
   SampleWorker("SampleQueue");
+  SubmissionWorker(submission_queue);
   const code = `
   #include<iostream>
   #include<stdio.h>
@@ -48,5 +52,12 @@ app.listen(serverConfig.PORT, () => {
   }
   `;
   const testCase = `10`;
-  runCpp(code, testCase);
+  submissionQueueProducer({
+    "1234": {
+      language: "CPP",
+      testCase,
+      code,
+    },
+  });
+  // runCpp(code, testCase);
 });
